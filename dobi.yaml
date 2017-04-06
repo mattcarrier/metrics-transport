@@ -1,0 +1,37 @@
+meta:
+  project: metrics-transport
+  default: build
+
+image=gradle:
+  image:  gradle
+  tags:   [ 3.4-jdk8-alpine ]
+  pull:   once
+
+image=dockerize:
+  image:  jwilder/dockerize
+  tags:   [ latest ] 
+  pull:   once
+
+mount=kitchen-sink:
+  bind: .
+  path: /opt/metrics-rabbit
+
+job=gradle-build:
+  use:          gradle
+  mounts:       [ kitchen-sink ]
+  working-dir:  /opt/metrics-rabbit
+  net-mode:     inttestenv_default
+  command:      gradle license build
+  env:          [ "ORG_GRADLE_PROJECT_rabbitHost=rabbit" ]
+
+job=wait-for-rabbit:
+  use:      dockerize
+  net-mode: inttestenv_default
+  command:  'dockerize -wait tcp://rabbit:5672 -timeout 1m'
+
+compose=int-test-env:
+  files:    [ docker-compose.yml ]
+  project:  'inttestenv'
+
+alias=build:
+  tasks: [ int-test-env, wait-for-rabbit, gradle-build ]

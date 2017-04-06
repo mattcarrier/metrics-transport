@@ -1,0 +1,74 @@
+plugins {
+  id "com.github.hierynomus.license" version "0.13.1"
+}
+
+license {
+  header rootProject.file('../LICENSE')
+  strictCheck true
+}
+
+allprojects {
+  apply plugin: 'license'
+
+  license {
+    header rootProject.file('LICENSE')
+    strictCheck true
+
+    ext.year = Calendar.getInstance().get(Calendar.YEAR)
+    ext.name = 'Matt Carrier'
+  }
+}
+
+subprojects {
+  apply plugin: 'java'
+  group = 'io.github.mattcarrier.metrics.transport'
+  version = '0.1'
+
+  repositories {
+    mavenCentral()
+  }
+
+  dependencies {
+    compile 'com.google.guava:guava:21.0'
+    compile 'io.dropwizard.metrics:metrics-core:3.2.2'
+
+    testCompile 'junit:junit:4.12'
+    testRuntime 'org.slf4j:slf4j-simple:1.7.22'
+  }
+}
+
+project('metrics-serialization-core') {
+  dependencies {
+    testCompile 'nl.jqno.equalsverifier:equalsverifier:2.2.1'
+  }
+}
+
+project('metrics-serialization-serializer-tests') {
+  dependencies {
+    compile 'junit:junit:4.12'
+    compile project(':metrics-serialization-core')
+  }
+}
+
+project(':metrics-serialization-kryo') {
+  dependencies {
+    compile 'com.esotericsoftware:kryo:4.0.0'
+    compile 'de.javakaffee:kryo-serializers:0.41'
+    compile project(':metrics-serialization-core')
+
+    testCompile project(':metrics-serialization-serializer-tests')
+  }
+}
+
+project(':metrics-rabbit') {
+  dependencies {
+    compile 'com.rabbitmq:amqp-client:4.1.0'
+    compile project(':metrics-serialization-core')
+  }
+
+  test {
+    if (project.hasProperty('rabbitHost')) {
+      systemProperty 'RABBIT_HOST', rabbitHost
+    }
+  }
+}
