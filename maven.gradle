@@ -1,0 +1,107 @@
+subprojects {
+  apply plugin: 'maven'
+  apply plugin: 'signing'
+
+  group = 'io.github.mattcarrier.metrics.transport'
+  version = '0.1.0-SNAPSHOT'
+
+  task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+  }
+  
+  task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+  }
+
+  artifacts {
+    archives javadocJar, sourcesJar
+  }
+
+  signing {
+    sign configurations.archives
+  }
+
+  uploadArchives {
+    repositories {
+      mavenDeployer {
+        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+          authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+
+        snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+          authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+
+        addFilter('metrics-serialization-core') {artifact, file ->
+          artifact.name == 'metrics-serialization-core'
+        } 
+        addProject(
+          pom('metrics-serialization-core'), 
+          'Metrics Serialization Core', 
+          'Core library for metrics serialization with default Java serializer'
+        )
+
+        addFilter('metrics-serialization-kryo') {artifact, file ->
+          artifact.name == 'metrics-serialization-kryo'
+        }
+        addProject(
+          pom('metrics-serialization-kryo'), 
+          'Metrics Serialization Kryo', 
+          'Metric serialization using Kryo'
+        )
+
+        addFilter('metrics-serialization-serializer-tests') {artifact, file ->
+          artifact.name == 'metrics-serialization-serializer-tests'
+        }
+        addProject(
+          pom('metrics-serialization-serializer-tests'), 
+          'Metrics Serialization Serializer Tests', 
+          'Base metric serializer tests'
+        )
+
+        addFilter('metrics-rabbit') {artifact, file ->
+          artifact.name == 'metrics-rabbit'
+        }
+        addProject(
+          pom('metrics-rabbit'), 
+          'Metrics Rabbit', 
+          'Dropwizard metrics transported over RabbitMQ powered by Metric Serialization'
+        )
+      }
+    }
+  }
+}
+
+def addProject(MavenPom pom, String n, String d) {
+  pom.project {
+    packaging 'jar'
+    url 'https://github.com/mattcarrier/metrics-transport'
+    name n
+    description d
+
+    scm {
+      connection 'scm:git:http://github.com/mattcarrier/metrics-transport.git'
+      developerConnection 'scm:git:https://github.com/mattcarrier/metrics-transport.git'
+      url 'https://github.com/mattcarrier/metrics-transport'
+    }
+
+    licenses {
+      license {
+        name 'The Apache License, Version 2.0'
+        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+      }
+    }
+
+    developers {
+      developer {
+        id 'mattcarrier'
+        name 'Matt Carrier'
+        email 'mcarrieruri@gmail.com'
+      }
+    }
+  }
+}

@@ -5,16 +5,46 @@ meta:
 image=gradle:
   image:  gradle
   tags:   [ 3.4-jdk8-alpine ]
-  pull:   once
+  pull:   always
 
 image=dockerize:
   image:  jwilder/dockerize
   tags:   [ latest ] 
-  pull:   once
+  pull:   always
 
 mount=kitchen-sink:
   bind: .
   path: /opt/metrics-rabbit
+
+job=ossrh-release:
+  use:          gradle
+  mounts:       [ kitchen-sink ]
+  working-dir:  /opt/metrics-rabbit
+  net-mode:     inttestenv_default
+  command:      gradle uploadArchives closeAndReleaseRepository
+  env:          [ 
+    "ORG_GRADLE_PROJECT_rabbitHost=rabbit",
+    "ORG_GRADLE_PROJECT_ossrhUsername={env.ossrhUsername}",
+    "ORG_GRADLE_PROJECT_ossrhPassword={env.ossrhPassword}",
+    "ORG_GRADLE_PROJECT_signing.keyId={env.signingKeyId}",
+    "ORG_GRADLE_PROJECT_signing.password={env.signingPassword}",
+    "ORG_GRADLE_PROJECT_signing.secretKeyRingFile={env.signingSecretKeyRingFile:../secring.gpg}"
+  ]
+
+job=ossrh-upload:
+  use:          gradle
+  mounts:       [ kitchen-sink ]
+  working-dir:  /opt/metrics-rabbit
+  net-mode:     inttestenv_default
+  command:      gradle uploadArchives
+  env:          [ 
+    "ORG_GRADLE_PROJECT_rabbitHost=rabbit",
+    "ORG_GRADLE_PROJECT_ossrhUsername={env.ossrhUsername}",
+    "ORG_GRADLE_PROJECT_ossrhPassword={env.ossrhPassword}",
+    "ORG_GRADLE_PROJECT_signing.keyId={env.signingKeyId}",
+    "ORG_GRADLE_PROJECT_signing.password={env.signingPassword}",
+    "ORG_GRADLE_PROJECT_signing.secretKeyRingFile={env.signingSecretKeyRingFile:../secring.gpg}"
+  ]
 
 job=gradle-build:
   use:          gradle
@@ -22,7 +52,12 @@ job=gradle-build:
   working-dir:  /opt/metrics-rabbit
   net-mode:     inttestenv_default
   command:      gradle license build
-  env:          [ "ORG_GRADLE_PROJECT_rabbitHost=rabbit" ]
+  env:          [ 
+    "ORG_GRADLE_PROJECT_rabbitHost=rabbit",
+    "ORG_GRADLE_PROJECT_ossrhUsername={env.ossrhUsername:}",
+    "ORG_GRADLE_PROJECT_ossrhPassword={env.ossrhPassword:}",
+    "ORG_GRADLE_PROJECT_signing.keyId="
+  ]
 
 job=wait-for-rabbit:
   use:      dockerize
@@ -35,3 +70,9 @@ compose=int-test-env:
 
 alias=build:
   tasks: [ int-test-env, wait-for-rabbit, gradle-build ]
+
+alias=deploy:
+  tasks: [ build, ossrh-upload ]
+
+alias=release:
+  tasks: [ build, ossrh-release ]

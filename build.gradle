@@ -1,14 +1,43 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.8.0"
+  }
+}
+
 plugins {
   id "com.github.hierynomus.license" version "0.13.1"
 }
 
-license {
-  header rootProject.file('../LICENSE')
-  strictCheck true
+apply plugin: 'io.codearte.nexus-staging'
+
+nexusStaging {
+  packageGroup = "io.github.mattcarrier"
+  username = ossrhUsername
+  password = ossrhPassword
 }
 
-allprojects {
+ext {
+  guavaVersion = '21.0'
+  metricsVersion = '3.2.2'
+  junitVersion = '4.12'
+  slf4jVersion = '1.7.22'
+  equalsVerifierVersion = '2.2.1'
+  kryoVersion = '4.0.0'
+  kryoSerializersVersion = '0.41'
+  rabbitmqVersion = '4.1.0'
+}
+
+subprojects {
+  apply plugin: 'java'
   apply plugin: 'license'
+
+  repositories {
+    mavenCentral()
+  }
 
   license {
     header rootProject.file('LICENSE')
@@ -17,43 +46,33 @@ allprojects {
     ext.year = Calendar.getInstance().get(Calendar.YEAR)
     ext.name = 'Matt Carrier'
   }
-}
-
-subprojects {
-  apply plugin: 'java'
-  group = 'io.github.mattcarrier.metrics.transport'
-  version = '0.1'
-
-  repositories {
-    mavenCentral()
-  }
 
   dependencies {
-    compile 'com.google.guava:guava:21.0'
-    compile 'io.dropwizard.metrics:metrics-core:3.2.2'
+    compile "com.google.guava:guava:${guavaVersion}"
+    compile "io.dropwizard.metrics:metrics-core:${metricsVersion}"
 
-    testCompile 'junit:junit:4.12'
-    testRuntime 'org.slf4j:slf4j-simple:1.7.22'
+    testCompile "junit:junit:${junitVersion}"
+    testRuntime "org.slf4j:slf4j-simple:${slf4jVersion}"
   }
 }
 
 project('metrics-serialization-core') {
   dependencies {
-    testCompile 'nl.jqno.equalsverifier:equalsverifier:2.2.1'
+    testCompile "nl.jqno.equalsverifier:equalsverifier:${equalsVerifierVersion}"
   }
 }
 
 project('metrics-serialization-serializer-tests') {
   dependencies {
-    compile 'junit:junit:4.12'
+    compile "junit:junit:${junitVersion}"
     compile project(':metrics-serialization-core')
   }
 }
 
 project(':metrics-serialization-kryo') {
   dependencies {
-    compile 'com.esotericsoftware:kryo:4.0.0'
-    compile 'de.javakaffee:kryo-serializers:0.41'
+    compile "com.esotericsoftware:kryo:${kryoVersion}"
+    compile "de.javakaffee:kryo-serializers:${kryoSerializersVersion}"
     compile project(':metrics-serialization-core')
 
     testCompile project(':metrics-serialization-serializer-tests')
@@ -62,7 +81,7 @@ project(':metrics-serialization-kryo') {
 
 project(':metrics-rabbit') {
   dependencies {
-    compile 'com.rabbitmq:amqp-client:4.1.0'
+    compile "com.rabbitmq:amqp-client:${rabbitmqVersion}"
     compile project(':metrics-serialization-core')
   }
 
@@ -71,4 +90,8 @@ project(':metrics-rabbit') {
       systemProperty 'RABBIT_HOST', rabbitHost
     }
   }
+}
+
+if (project.getProperty("signing.keyId")) {
+  apply from: 'maven.gradle'
 }
