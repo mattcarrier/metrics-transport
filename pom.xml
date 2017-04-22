@@ -1,0 +1,200 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>io.github.mattcarrier.metrics.transport</groupId>
+  <artifactId>metrics-transport-parent</artifactId>
+  <version>0.2.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>Metrics Transport</name>
+  <description>A Serialization/Transportation library for Dropwizard Metrics</description>
+  <url>https://github.com/mattcarrier/metrics-transport</url>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Matt Carrier</name>
+      <email>mcarrieruri@gmail.com</email>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:http://github.com/mattcarrier/metrics-transport.git</connection>
+    <developerConnection>scm:git:https://github.com/mattcarrier/metrics-transport.git</developerConnection>
+    <url>https://github.com/mattcarrier/metrics-transport</url>
+  </scm>
+
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <versions.guava>21.0</versions.guava>
+    <versions.metrics>3.2.2</versions.metrics>
+    <versions.junit>4.12</versions.junit>
+    <versions.slf4j>1.7.22</versions.slf4j>
+    <versions.equalsverifier>2.2.1</versions.equalsverifier>
+    <versions.kryo>4.0.0</versions.kryo>
+    <versions.kryoserializers>0.41</versions.kryoserializers>
+    <versions.rabbitmq>4.1.0</versions.rabbitmq>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${versions.junit}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>nl.jqno.equalsverifier</groupId>
+      <artifactId>equalsverifier</artifactId>
+      <version>${versions.equalsverifier}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>${versions.slf4j}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <profiles>
+    <profile>
+      <id>ossrh</id>
+      <properties>
+        <gpg.passphrase>${env.SIGNING_PASSPHRASE}</gpg.passphrase>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.5</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>1.6.7</version>
+            <extensions>true</extensions>
+            <configuration>
+              <serverId>ossrh</serverId>
+              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+              <autoReleaseAfterClose>true</autoReleaseAfterClose>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>2.2.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.9.1</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>timestamp-property</id>
+            <goals>
+              <goal>timestamp-property</goal>
+            </goals>
+            <configuration>
+              <locale>en_US</locale>
+              <name>current.year</name>
+              <pattern>yyyy</pattern>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.mycila</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>3.0</version>
+        <configuration>
+          <header>LICENSE</header>
+          <properties>
+            <year>${current.year}</year>
+            <owner>Matt Carrier</owner>
+            <email>mcarrieruri@gmail.com</email>
+          </properties>
+          <excludes>
+            <exclude>.dobi/**</exclude>
+            <exclude>**/*.key</exclude>
+            <exclude>**/*.enc</exclude>
+            <exclude>LICENSE</exclude>
+            <exclude>**/*.xml</exclude>
+            <exclude>**/Dockerfile</exclude>
+            <exclude>*.yaml</exclude>
+            <exclude>*.yml</exclude>
+            <exclude>**/*.sh</exclude>
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <modules>
+    <module>metrics-serialization-core</module>
+    <module>metrics-serialization-kryo</module>
+    <module>metrics-serialization-serializer-tests</module>
+    <module>metrics-rabbit</module>
+  </modules>
+</project>

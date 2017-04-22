@@ -1,4 +1,0 @@
-include 'metrics-serialization-core',
-        'metrics-serialization-serializer-tests',
-        'metrics-serialization-kryo',
-        'metrics-rabbit'

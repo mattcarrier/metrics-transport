@@ -2,7 +2,5 @@
 .dobi
 .project
 .settings
-.gradle/
-build/
 bin/
-secring.gpg
+target

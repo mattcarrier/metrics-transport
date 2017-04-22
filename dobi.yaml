@@ -2,61 +2,50 @@ meta:
   project: metrics-transport
   default: build
 
-image=gradle:
-  image:  gradle
-  tags:   [ 3.4-jdk8-alpine ]
-  pull:   always
+image=maven:
+  image:    metrics-transport-maven
+  context:  dobi/ossrh
 
 image=dockerize:
   image:  jwilder/dockerize
-  tags:   [ latest ] 
+  tags:   [ latest ]
   pull:   always
 
 mount=kitchen-sink:
   bind: .
-  path: /opt/metrics-rabbit
+  path: /opt/metrics-transport
 
-job=ossrh-release:
-  use:          gradle
-  mounts:       [ kitchen-sink ]
-  working-dir:  /opt/metrics-rabbit
-  net-mode:     inttestenv_default
-  command:      gradle uploadArchives closeAndReleaseRepository
-  env:          [ 
-    "ORG_GRADLE_PROJECT_rabbitHost=rabbit",
-    "ORG_GRADLE_PROJECT_ossrhUsername={env.ossrhUsername}",
-    "ORG_GRADLE_PROJECT_ossrhPassword={env.ossrhPassword}",
-    "ORG_GRADLE_PROJECT_signing.keyId={env.signingKeyId}",
-    "ORG_GRADLE_PROJECT_signing.password={env.signingPassword}",
-    "ORG_GRADLE_PROJECT_signing.secretKeyRingFile={env.signingSecretKeyRingFile:../secring.gpg}"
-  ]
+mount=maven-settings:
+  bind: maven/settings.xml
+  path: /usr/share/maven/conf/settings.xml
 
 job=ossrh-upload:
-  use:          gradle
-  mounts:       [ kitchen-sink ]
-  working-dir:  /opt/metrics-rabbit
+  use:          maven
+  mounts:       [
+    kitchen-sink,
+    maven-settings
+  ]
+  working-dir:  /opt/metrics-transport
   net-mode:     inttestenv_default
-  command:      gradle uploadArchives
-  env:          [ 
-    "ORG_GRADLE_PROJECT_rabbitHost=rabbit",
-    "ORG_GRADLE_PROJECT_ossrhUsername={env.ossrhUsername}",
-    "ORG_GRADLE_PROJECT_ossrhPassword={env.ossrhPassword}",
-    "ORG_GRADLE_PROJECT_signing.keyId={env.signingKeyId}",
-    "ORG_GRADLE_PROJECT_signing.password={env.signingPassword}",
-    "ORG_GRADLE_PROJECT_signing.secretKeyRingFile={env.signingSecretKeyRingFile:../secring.gpg}"
+  command:      mvn -P ossrh deploy
+  env:          [
+    "RABBIT_HOST=rabbit",
+    "OSSRH_USERNAME={env.OSSRH_USERNAME}",
+    "OSSRH_PASSWORD={env.OSSRH_PASSWORD}",
+    "SIGNING_PASSPHRASE={env.SIGNING_PASSPHRASE}"
   ]
 
-job=gradle-build:
-  use:          gradle
-  mounts:       [ kitchen-sink ]
-  working-dir:  /opt/metrics-rabbit
+job=maven-build:
+  use:          maven
+  mounts:       [
+    kitchen-sink,
+    maven-settings
+  ]
+  working-dir:  /opt/metrics-transport
   net-mode:     inttestenv_default
-  command:      gradle license build
-  env:          [ 
-    "ORG_GRADLE_PROJECT_rabbitHost=rabbit",
-    "ORG_GRADLE_PROJECT_ossrhUsername={env.ossrhUsername:}",
-    "ORG_GRADLE_PROJECT_ossrhPassword={env.ossrhPassword:}",
-    "ORG_GRADLE_PROJECT_signing.keyId="
+  command:      mvn clean verify
+  env:          [
+    "RABBIT_HOST=rabbit"
   ]
 
 job=wait-for-rabbit:
@@ -69,10 +58,7 @@ compose=int-test-env:
   project:  'inttestenv'
 
 alias=build:
-  tasks: [ int-test-env, wait-for-rabbit, gradle-build ]
+  tasks: [ int-test-env, wait-for-rabbit, maven-build ]
 
 alias=deploy:
   tasks: [ build, ossrh-upload ]
-
-alias=release:
-  tasks: [ build, ossrh-release ]

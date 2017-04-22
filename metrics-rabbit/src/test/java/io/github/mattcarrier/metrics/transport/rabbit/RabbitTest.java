@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 Matt Carrier
+ * Copyright 2017 Matt Carrier mcarrieruri@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ import io.github.mattcarrier.metrics.transport.serialization.transportable.Trans
  * @author mattcarrier
  * @since Apr 4, 2017
  */
-public class RabbitTests {
+public class RabbitTest {
   private static final String                 RABBIT_HOST = System.getProperty("RABBIT_HOST",
       RabbitMQRule.DEFAULT_HOST);
 
@@ -72,7 +72,7 @@ public class RabbitTests {
 
   private static Serializer                   serializer  = new JavaSerializer();
   private static MetricRegistry               registry    = new MetricRegistry();
-  private static String                       metricName  = name(RabbitTests.class, "metric");
+  private static String                       metricName  = name(RabbitTest.class, "metric");
   private static ImmutableMap<String, Object> metricMeta  = ImmutableMap.<String, Object>builder()
       .put("host", "127.0.0.1").build();
 

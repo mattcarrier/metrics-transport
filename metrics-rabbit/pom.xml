@@ -1,0 +1,46 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+      <groupId>io.github.mattcarrier.metrics.transport</groupId>
+      <artifactId>metrics-transport-parent</artifactId>
+      <version>0.2.0-SNAPSHOT</version>
+  </parent>
+
+  <name>Metrics Rabbit</name>
+  <description>Dropwizard metrics transported over RabbitMQ powered by Metric Serialization</description>
+
+  <artifactId>metrics-rabbit</artifactId>
+  <packaging>jar</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>metrics-serialization-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.rabbitmq</groupId>
+      <artifactId>amqp-client</artifactId>
+      <version>${versions.rabbitmq}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.4.2</version>
+        <configuration>
+          <systemProperties>
+            <property>
+              <name>RABBIT_HOST</name>
+              <value>${env.RABBIT_HOST}</value>
+            </property>
+          </systemProperties>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
