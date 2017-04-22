@@ -3,7 +3,7 @@
   <parent>
       <groupId>io.github.mattcarrier.metrics.transport</groupId>
       <artifactId>metrics-transport-parent</artifactId>
-      <version>0.2.0-SNAPSHOT</version>
+      <version>0.2.0</version>
   </parent>
 
   <name>Metrics Rabbit</name>
