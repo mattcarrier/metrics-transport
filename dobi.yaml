@@ -3,13 +3,18 @@ meta:
   default: build
 
 image=maven:
-  image:    metrics-transport-maven
-  context:  dobi/ossrh
+  image:  maven
+  tags:   [ 3.5.0-jdk-8-alpine ]
+  pull:   always
 
 image=dockerize:
   image:  jwilder/dockerize
   tags:   [ latest ]
   pull:   always
+
+image=maven-release:
+  image:    metrics-transport-maven
+  context:  dobi/ossrh
 
 mount=kitchen-sink:
   bind: .
@@ -20,6 +25,21 @@ mount=maven-settings:
   path: /usr/share/maven/conf/settings.xml
 
 job=ossrh-upload:
+  use:          maven-release
+  mounts:       [
+    kitchen-sink,
+    maven-settings
+  ]
+  working-dir:  /opt/metrics-transport
+  net-mode:     inttestenv_default
+  command:      mvn -P ossrh -Dmaven.test.skip=true deploy
+  env:          [
+    "OSSRH_USERNAME={env.OSSRH_USERNAME}",
+    "OSSRH_PASSWORD={env.OSSRH_PASSWORD}",
+    "SIGNING_PASSPHRASE={env.SIGNING_PASSPHRASE}"
+  ]
+
+job=maven-coverage:
   use:          maven
   mounts:       [
     kitchen-sink,
@@ -27,12 +47,14 @@ job=ossrh-upload:
   ]
   working-dir:  /opt/metrics-transport
   net-mode:     inttestenv_default
-  command:      mvn -P ossrh deploy
+  command:      mvn coveralls:report sonar:sonar
   env:          [
-    "RABBIT_HOST=rabbit",
-    "OSSRH_USERNAME={env.OSSRH_USERNAME}",
-    "OSSRH_PASSWORD={env.OSSRH_PASSWORD}",
-    "SIGNING_PASSPHRASE={env.SIGNING_PASSPHRASE}"
+    "COVERALLS_REPO_TOKEN={env.COVERALLS_REPO_TOKEN}",
+    "TRAVIS={env.TRAVIS:}",
+    "TRAVIS_JOB_ID={env.TRAVIS_JOB_ID:}",
+    "TRAVIS_BRANCH={env.TRAVIS_BRANCH:}",
+    "TRAVIS_PULL_REQUEST={env.TRAVIS_PULL_REQUEST:}",
+    "SONAR_TOKEN={env.SONAR_TOKEN}"
   ]
 
 job=maven-build:
@@ -43,7 +65,7 @@ job=maven-build:
   ]
   working-dir:  /opt/metrics-transport
   net-mode:     inttestenv_default
-  command:      mvn clean verify
+  command:      mvn clean verify jacoco:report
   env:          [
     "RABBIT_HOST=rabbit"
   ]
@@ -57,8 +79,11 @@ compose=int-test-env:
   files:    [ docker-compose.yml ]
   project:  'inttestenv'
 
+alias=coverage:
+  tasks: [ build, maven-coverage ]
+
 alias=build:
   tasks: [ int-test-env, wait-for-rabbit, maven-build ]
 
 alias=deploy:
-  tasks: [ build, ossrh-upload ]
+  tasks: [ coverage, ossrh-upload ]
