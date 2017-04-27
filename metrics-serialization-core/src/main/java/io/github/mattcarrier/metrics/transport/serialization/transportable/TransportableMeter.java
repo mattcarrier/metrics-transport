@@ -1,27 +1,28 @@
 /**
  * Copyright 2017 Matt Carrier mcarrieruri@gmail.com
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * <p>Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
+ * <p>Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.mattcarrier.metrics.transport.serialization.transportable;
 
-import java.util.Objects;
+package io.github.mattcarrier.metrics.transport.serialization.transportable;
 
 import com.codahale.metrics.Metered;
 
+import java.util.Objects;
+
 /**
- * Transportable {@link Metered}
- * 
+ * Transportable {@link Metered}.
+ *
  * @author mattcarrier
  * @since Apr 2, 2017
  */
@@ -37,6 +38,20 @@ public class TransportableMeter extends TransportableCounter implements Metered 
 
   }
 
+  /**
+   * Creates a {@link TransportableMeter}.
+   *
+   * @param count
+   *          the count
+   * @param fifteenMinute
+   *          the fifteen minute value
+   * @param fiveMinute
+   *          the five minute value
+   * @param mean
+   *          the mean value
+   * @param oneMinute
+   *          the one minute value
+   */
   public TransportableMeter(long count, double fifteenMinute, double fiveMinute, double mean, double oneMinute) {
     super(count);
     this.fifteenMinute = fifteenMinute;
@@ -47,8 +62,8 @@ public class TransportableMeter extends TransportableCounter implements Metered 
 
   /**
    * Generates a new {@link TransportableMeter} from an originating
-   * {@link Metered}
-   * 
+   * {@link Metered}.
+   *
    * @param metered
    *          the originating {@link Metered}
    * @return the generated {@link TransportableMeter}

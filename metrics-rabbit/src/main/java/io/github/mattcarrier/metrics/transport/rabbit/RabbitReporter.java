@@ -1,30 +1,22 @@
 /**
  * Copyright 2017 Matt Carrier mcarrieruri@gmail.com
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * <p>Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
+ * <p>Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.github.mattcarrier.metrics.transport.rabbit;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.time.Clock;
-import java.time.ZonedDateTime;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import io.github.mattcarrier.metrics.transport.serialization.transportable.TransportableFactory;
 
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Gauge;
@@ -36,11 +28,15 @@ import com.codahale.metrics.ScheduledReporter;
 import com.codahale.metrics.Timer;
 import com.google.common.collect.ImmutableMap;
 
-import io.github.mattcarrier.metrics.transport.serialization.transportable.TransportableFactory;
+import java.time.Clock;
+import java.time.ZonedDateTime;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Publishes all metrics to RabbitMQ.
- * 
+ *
  * @author mattcarrier
  * @since Apr 4, 2017
  */
@@ -64,16 +60,16 @@ public class RabbitReporter extends ScheduledReporter {
       SortedMap<String, Histogram> histograms, SortedMap<String, Meter> meters, SortedMap<String, Timer> timers) {
     final ZonedDateTime timestamp = ZonedDateTime.now(clock);
 
-    gauges.forEach((k, m) -> rabbit.publish(factory.convert(k, timestamp, metricMeta, m)));
-    counters.forEach((k, m) -> rabbit.publish(factory.convert(k, timestamp, metricMeta, m)));
-    histograms.forEach((k, m) -> rabbit.publish(factory.convert(k, timestamp, metricMeta, m)));
-    meters.forEach((k, m) -> rabbit.publish(factory.convert(k, timestamp, metricMeta, m)));
-    timers.forEach((k, m) -> rabbit.publish(factory.convert(k, timestamp, metricMeta, m)));
+    gauges.forEach((key, metric) -> rabbit.publish(factory.convert(key, timestamp, metricMeta, metric)));
+    counters.forEach((key, metric) -> rabbit.publish(factory.convert(key, timestamp, metricMeta, metric)));
+    histograms.forEach((key, metric) -> rabbit.publish(factory.convert(key, timestamp, metricMeta, metric)));
+    meters.forEach((key, metric) -> rabbit.publish(factory.convert(key, timestamp, metricMeta, metric)));
+    timers.forEach((key, metric) -> rabbit.publish(factory.convert(key, timestamp, metricMeta, metric)));
   }
 
   /**
-   * Builder for {@link RabbitReporter}
-   * 
+   * Builder for {@link RabbitReporter}.
+   *
    * @author mattcarrier
    * @since Apr 4, 2017
    */
@@ -122,19 +118,13 @@ public class RabbitReporter extends ScheduledReporter {
     }
 
     /**
-     * Builds the {@link RabbitReporter}
-     * 
+     * Builds the {@link RabbitReporter}.
+     *
      * @param rabbit
      *          the {@link RabbitClient}
      * @return the {@link RabbitReporter}
-     * @throws KeyManagementException
-     * @throws NoSuchAlgorithmException
-     * @throws URISyntaxException
-     * @throws IOException
-     * @throws TimeoutException
      */
-    public RabbitReporter build(RabbitClient rabbit)
-        throws KeyManagementException, NoSuchAlgorithmException, URISyntaxException, IOException, TimeoutException {
+    public RabbitReporter build(RabbitClient rabbit) {
       return new RabbitReporter(registry, filter, rateUnit, durationUnit, rabbit, clock, factory, metricMeta);
     }
   }

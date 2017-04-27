@@ -1,19 +1,34 @@
 /**
  * Copyright 2017 Matt Carrier mcarrieruri@gmail.com
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * <p>Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
+ * <p>Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.github.mattcarrier.metrics.transport.rabbit;
+
+import io.github.mattcarrier.metrics.transport.serialization.Serializer;
+import io.github.mattcarrier.metrics.transport.serialization.SerializerFactory;
+import io.github.mattcarrier.metrics.transport.serialization.transportable.TransportableMetric;
+
+import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.AMQP.BasicProperties;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.DefaultConsumer;
+import com.rabbitmq.client.Envelope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -23,24 +38,9 @@ import java.util.Map;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.AMQP.BasicProperties;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.DefaultConsumer;
-import com.rabbitmq.client.Envelope;
-
-import io.github.mattcarrier.metrics.transport.serialization.Serializer;
-import io.github.mattcarrier.metrics.transport.serialization.SerializerFactory;
-import io.github.mattcarrier.metrics.transport.serialization.transportable.TransportableMetric;
-
 /**
  * RabbitMQ Client.
- * 
+ *
  * @author mattcarrier
  * @since Apr 3, 2017
  */
@@ -61,7 +61,7 @@ public class RabbitClient {
 
   /**
    * Publishes a {@link TransportableMetric} to RabbitMQ.
-   * 
+   *
    * @param metric
    *          the {@link TransportableMetric} to publish
    */
@@ -77,12 +77,13 @@ public class RabbitClient {
 
   /**
    * Registers a {@link TransportableMetric} consumer with RabbitMQ.
-   * 
+   *
    * @param consumerTag
    *          the consumer tag
    * @param consumer
    *          the consumer
    * @throws IOException
+   *           if there are any issues handling the deliveries
    */
   public void consume(String consumerTag, Consumer<TransportableMetric> consumer) throws IOException {
     channel.basicConsume(queueName, true, "myConsumerTag", new DefaultConsumer(channel) {
@@ -100,9 +101,11 @@ public class RabbitClient {
 
   /**
    * Closes the RabbitMQ connection.
-   * 
+   *
    * @throws IOException
+   *           if there is an issue with closing the channel or connection
    * @throws TimeoutException
+   *           if there is a timeout when closing the channel or connection
    */
   public void close() throws IOException, TimeoutException {
     channel.close();
@@ -111,7 +114,7 @@ public class RabbitClient {
 
   /**
    * {@link RabbitClient} builder.
-   * 
+   *
    * @author mattcarrier
    * @since Apr 4, 2017
    */
@@ -179,19 +182,26 @@ public class RabbitClient {
     }
 
     /**
-     * Builds the {@link RabbitClient}
-     * 
+     * Builds the {@link RabbitClient}.
+     *
      * @return the {@link RabbitClient}
      * @throws KeyManagementException
+     *           if there is an issue with key management
      * @throws NoSuchAlgorithmException
+     *           if there is an issue with the algo
      * @throws URISyntaxException
+     *           if there is an issue with the URI
      * @throws IOException
+     *           if an error is encountered
      * @throws TimeoutException
+     *           if a timeout error is encountered
      * @throws InstantiationException
+     *           if there is an issue creating the serializer
      * @throws IllegalAccessException
+     *           if there is an issue creating the serializer
      */
     public RabbitClient build() throws KeyManagementException, NoSuchAlgorithmException, URISyntaxException,
-        IOException, TimeoutException, InstantiationException, IllegalAccessException {
+    IOException, TimeoutException, InstantiationException, IllegalAccessException {
       final ConnectionFactory factory = new ConnectionFactory();
       factory.setUri(buildConnectionUri());
       final Connection conn = factory.newConnection();

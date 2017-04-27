@@ -1,29 +1,30 @@
 /**
  * Copyright 2017 Matt Carrier mcarrieruri@gmail.com
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * <p>Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
+ * <p>Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.mattcarrier.metrics.transport.serialization.transportable;
 
-import java.util.Arrays;
-import java.util.Objects;
+package io.github.mattcarrier.metrics.transport.serialization.transportable;
 
 import com.codahale.metrics.Snapshot;
 import com.google.common.base.MoreObjects;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
- * Transportable {@link Snapshot}
- * 
+ * Transportable {@link Snapshot}.
+ *
  * @author mattcarrier
  * @since Apr 2, 2017
  */
@@ -47,6 +48,32 @@ public class TransportableSnapshot implements Transportable {
 
   }
 
+  /**
+   * Creates a {@link TransportableSnapshot}.
+   *
+   * @param values
+   *          the values
+   * @param max
+   *          the max value
+   * @param mean
+   *          the mean value
+   * @param min
+   *          the min value
+   * @param stdDev
+   *          the standard deviation
+   * @param median
+   *          the median value
+   * @param seventyFifth
+   *          the seventy-fifth percentile
+   * @param ninetyFifth
+   *          the ninety-fifth percentile
+   * @param ninetyEigth
+   *          the ninety-eigth percentile
+   * @param ninetyNinth
+   *          the ninety-ninth percentile
+   * @param nineHundredNinetyNinth
+   *          the nine-hundred and ninety-ninth percentile
+   */
   public TransportableSnapshot(long[] values, long max, double mean, long min, double stdDev, double median,
       double seventyFifth, double ninetyFifth, double ninetyEigth, double ninetyNinth, double nineHundredNinetyNinth) {
     this.values = values;
@@ -65,8 +92,8 @@ public class TransportableSnapshot implements Transportable {
 
   /**
    * Generates a new {@link TransportableSnapshot} from an originating
-   * {@link Snapshot}
-   * 
+   * {@link Snapshot}.
+   *
    * @param snapshot
    *          the originating {@link Snapshot}
    * @return the generated {@link TransportableSnapshot}
