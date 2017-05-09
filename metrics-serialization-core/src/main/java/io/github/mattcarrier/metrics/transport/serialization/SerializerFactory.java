@@ -16,12 +16,12 @@
 
 package io.github.mattcarrier.metrics.transport.serialization;
 
-import com.google.common.reflect.ClassPath;
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -35,8 +35,9 @@ public class SerializerFactory {
   private final Serializer    serializer;
 
   /**
-   * Checks the classpath for any existing serializers and defaults to the
-   * {@link JavaSerializer} if none is found.
+   * Checks the classpath under package
+   * 'io.github.mattcarrier.metrics.transport' for any existing serializers and
+   * defaults to the {@link JavaSerializer} if none is found.
    *
    * @throws IOException
    *           if there is an issue scanning the classpath
@@ -46,11 +47,26 @@ public class SerializerFactory {
    *           if there is an issue instantiating the serializer
    */
   public SerializerFactory() throws IOException, InstantiationException, IllegalAccessException {
-    log.debug("Scanning the classpath for metric serializers.");
-    final List<Class<?>> serializers = ClassPath.from(getClass().getClassLoader()).getAllClasses().stream()
-        .filter(ci -> ci.getName().endsWith("Serializer")).map(ci -> ci.load())
-        .filter(c -> Serializer.class.isAssignableFrom(c) && JavaSerializer.class != c && Serializer.class != c)
-        .collect(Collectors.toList());
+    this("io.github.mattcarrier.metrics.transport");
+  }
+
+  /**
+   * Checks the classpath under basePackage for any existing serializers and
+   * defaults to the {@link JavaSerializer} if none is found.
+   *
+   * @param basePackage
+   *          the base package to scan for serializers
+   * @throws IOException
+   *           if there is an issue scanning the classpath
+   * @throws InstantiationException
+   *           if there is an issue instantiating the serializer
+   * @throws IllegalAccessException
+   *           if there is an issue instantiating the serializer
+   */
+  public SerializerFactory(String basePackage) throws IOException, InstantiationException, IllegalAccessException {
+    log.debug("Scanning the classpath under basePackage [{}] for metric serializers.", basePackage);
+    final Set<Class<? extends Serializer>> serializers = new Reflections(basePackage).getSubTypesOf(Serializer.class)
+        .stream().filter(s -> !JavaSerializer.class.equals(s)).collect(Collectors.toSet());
 
     if (serializers.isEmpty()) {
       log.warn("Using java serialization for metric transportation which is not suggested for production use.");
@@ -59,11 +75,12 @@ public class SerializerFactory {
     }
 
     if (1 != serializers.size()) {
-      log.warn("Multiple metric transportation serializer implementations have been found on the classpath.");
+      log.warn("Multiple metric transportation serializer implementations have been found on the classpath [{}].",
+          serializers);
     }
 
-    final Class<?> serializerClass = serializers.get(0);
-    log.info("Using [{}] for metric transportation serialization.", serializerClass.getSimpleName());
+    final Class<?> serializerClass = serializers.iterator().next();
+    log.info("Using [{}] for metric transportation serialization.", serializerClass);
     serializer = (Serializer) serializerClass.newInstance();
   }
 

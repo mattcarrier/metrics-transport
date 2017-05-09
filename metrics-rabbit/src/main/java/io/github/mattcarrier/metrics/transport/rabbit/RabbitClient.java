@@ -119,17 +119,19 @@ public class RabbitClient {
    * @since Apr 4, 2017
    */
   public static class Builder {
-    private String              username     = "guest";
-    private String              password     = "guest";
-    private String              host         = "localhost";
-    private String              port         = "5672";
-    private String              vhost        = "";
+    private String              username              = "guest";
+    private String              password              = "guest";
+    private String              host                  = "localhost";
+    private String              port                  = "5672";
+    private String              vhost                 = "";
 
-    private String              queue        = "metrics-rabbit";
-    private boolean             isDurable    = true;
-    private boolean             isExclusive  = false;
-    private boolean             isAutoDelete = false;
-    private Map<String, Object> arguments    = null;
+    private String              queue                 = "metrics-rabbit";
+    private boolean             isDurable             = true;
+    private boolean             isExclusive           = false;
+    private boolean             isAutoDelete          = false;
+    private Map<String, Object> arguments             = null;
+
+    private String              serializerBasePackage = null;
 
     public Builder username(String username) {
       this.username = username;
@@ -181,6 +183,11 @@ public class RabbitClient {
       return this;
     }
 
+    public Builder serializerBasePackage(String serializerBasePackage) {
+      this.serializerBasePackage = serializerBasePackage;
+      return this;
+    }
+
     /**
      * Builds the {@link RabbitClient}.
      *
@@ -208,7 +215,9 @@ public class RabbitClient {
       final Channel channel = conn.createChannel();
 
       channel.queueDeclare(queue, isDurable, isExclusive, isAutoDelete, arguments);
-      return new RabbitClient(conn, channel, queue, new SerializerFactory().serializer());
+      final SerializerFactory serializerFactory = null == serializerBasePackage ? new SerializerFactory()
+          : new SerializerFactory(serializerBasePackage);
+      return new RabbitClient(conn, channel, queue, serializerFactory.serializer());
     }
 
     private String buildConnectionUri() {

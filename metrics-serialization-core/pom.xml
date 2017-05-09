@@ -27,5 +27,10 @@
       <artifactId>metrics-core</artifactId>
       <version>${versions.metrics}</version>
     </dependency>
+    <dependency>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <version>${versions.reflections}</version>
+    </dependency>
   </dependencies>
 </project>
