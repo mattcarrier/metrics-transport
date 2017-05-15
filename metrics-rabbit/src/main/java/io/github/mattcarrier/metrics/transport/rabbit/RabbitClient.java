@@ -27,8 +27,6 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -45,8 +43,6 @@ import java.util.function.Consumer;
  * @since Apr 3, 2017
  */
 public class RabbitClient {
-  private static final Logger log = LoggerFactory.getLogger(RabbitClient.class);
-
   private final Connection    conn;
   private final Channel       channel;
   private final String        queueName;
@@ -71,7 +67,7 @@ public class RabbitClient {
           new BasicProperties.Builder().type(TransportType.TRANSPORTABLE_METRIC.getType()).build(),
           serializer.serialize(metric));
     } catch (Exception e) {
-      log.error("");
+      throw new RuntimeException(e);
     }
   }
 

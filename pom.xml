@@ -227,6 +227,7 @@
             <exclude>*.yaml</exclude>
             <exclude>*.yml</exclude>
             <exclude>**/*.sh</exclude>
+            <exclude>**/*.md.html</exclude>
           </excludes>
         </configuration>
         <executions>

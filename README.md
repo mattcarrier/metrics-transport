@@ -26,7 +26,7 @@ Usage
 <dependency>
   <groupId>io.github.mattcarrier.metrics.transport</groupId>
   <artifactId>metrics-rabbit</artifactId>
-  <version>0.2.0</version>
+  <version>0.4.0</version>
 </dependency>
 ...
 ```
@@ -36,7 +36,7 @@ Usage
 <dependency>
   <groupId>io.github.mattcarrier.metrics.transport</groupId>
   <artifactId>metrics-serialization-kryo</artifactId>
-  <version>0.2.0</version>
+  <version>0.4.0</version>
 </dependency>
 ...
 ```
