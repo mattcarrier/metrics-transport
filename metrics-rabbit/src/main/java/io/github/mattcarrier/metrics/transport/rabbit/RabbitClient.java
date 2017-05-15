@@ -82,7 +82,7 @@ public class RabbitClient {
    *           if there are any issues handling the deliveries
    */
   public void consume(String consumerTag, Consumer<TransportableMetric> consumer) throws IOException {
-    channel.basicConsume(queueName, true, "myConsumerTag", new DefaultConsumer(channel) {
+    channel.basicConsume(queueName, true, consumerTag, new DefaultConsumer(channel) {
       @Override
       public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
           throws IOException {
