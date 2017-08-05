@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-package io.github.mattcarrier.metrics.transport.serialization.transportable;
+package io.github.mattcarrier.metrics.transport.consumption;
 
-import java.io.Serializable;
+import io.github.mattcarrier.metrics.transport.serialization.transportable.TransportableMetric;
 
 /**
- * Marker for transportable instances.
+ * Default metric consumer and logs out metrics.
  *
  * @author mattcarrier
- * @since Apr 2, 2017
+ * @since Aug 03, 2017
  */
-public interface Transportable extends Serializable {
-
+@MetricConsumerImpl
+public class DefaultMetricConsumer extends MetricConsumer<TransportableMetric> {
+  @Override
+  protected TransportableMetric convert(TransportableMetric metric) {
+    return metric;
+  }
 }

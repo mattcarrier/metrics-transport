@@ -14,20 +14,33 @@
  * limitations under the License.
  */
 
-package io.github.mattcarrier.metrics.transport.serialization;
+package io.github.mattcarrier.metrics.transport.consumer;
 
+import static org.junit.Assert.assertEquals;
+
+import io.github.mattcarrier.metrics.transport.consumption.DefaultMetricConsumer;
 import io.github.mattcarrier.metrics.transport.serialization.transportable.TransportableMetric;
 
+import org.junit.Before;
+import org.junit.Test;
+
 /**
- * Tests serialization for {@link TransportableMetric} objects using the
- * {@link JavaSerializer}
+ * Unit tests for {@link io.github.mattcarrier.metrics.transport.consumption.DefaultMetricConsumer}.
  *
  * @author mattcarrier
- * @since Apr 2, 2017
+ * @since Aug 05, 2017
  */
-public class JavaSerializerTest extends AbstractSerializerTest {
-  @Override
-  protected Serializer serializer() {
-    return new JavaSerializer();
+public class DefaultMetricConsumerTest {
+  private DefaultMetricConsumer consumer;
+
+  @Before
+  public void create() {
+    consumer = new DefaultMetricConsumer();
+  }
+
+  @Test
+  public void convert() {
+    TransportableMetric metric = new TransportableMetric();
+    assertEquals(metric, consumer.consume(metric));
   }
 }

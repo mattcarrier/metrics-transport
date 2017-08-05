@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     <p>http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
  * <p>Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,7 +30,7 @@ import java.util.Objects;
 public class TransportableGauge<T> implements Transportable, Gauge<T> {
   private static final long serialVersionUID = 1L;
 
-  private T                 value;
+  private T value;
 
   public TransportableGauge() {
 
@@ -40,21 +40,21 @@ public class TransportableGauge<T> implements Transportable, Gauge<T> {
     this.value = value;
   }
 
-  @Override
-  public T getValue() {
-    return value;
-  }
-
   /**
    * Generates a new {@link TransportableGauge} from an originating
    * {@link Gauge}.
    *
    * @param gauge
-   *          the originating {@link Gauge}
+   *     the originating {@link Gauge}
    * @return the generated {@link TransportableGauge}
    */
   public static <T> TransportableGauge<T> of(Gauge<T> gauge) {
     return new TransportableGauge<>(gauge.getValue());
+  }
+
+  @Override
+  public T getValue() {
+    return value;
   }
 
   @Override

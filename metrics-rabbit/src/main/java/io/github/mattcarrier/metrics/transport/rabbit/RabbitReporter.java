@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     <p>http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
  * <p>Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -47,7 +47,8 @@ public class RabbitReporter extends ScheduledReporter {
   private final ImmutableMap<String, Object> metricMeta;
 
   protected RabbitReporter(MetricRegistry registry, MetricFilter filter, TimeUnit rateUnit, TimeUnit durationUnit,
-      RabbitClient rabbit, Clock clock, TransportableFactory factory, Map<String, Object> metricMeta) {
+                           RabbitClient rabbit, Clock clock, TransportableFactory factory,
+                           Map<String, Object> metricMeta) {
     super(registry, "rabbit-reporter", filter, rateUnit, durationUnit);
     this.rabbit = rabbit;
     this.clock = clock;
@@ -57,7 +58,8 @@ public class RabbitReporter extends ScheduledReporter {
 
   @Override
   public void report(@SuppressWarnings("rawtypes") SortedMap<String, Gauge> gauges, SortedMap<String, Counter> counters,
-      SortedMap<String, Histogram> histograms, SortedMap<String, Meter> meters, SortedMap<String, Timer> timers) {
+                     SortedMap<String, Histogram> histograms, SortedMap<String, Meter> meters,
+                     SortedMap<String, Timer> timers) {
     final ZonedDateTime timestamp = ZonedDateTime.now(clock);
 
     gauges.forEach((key, metric) -> rabbit.publish(factory.convert(key, timestamp, metricMeta, metric)));
@@ -121,7 +123,7 @@ public class RabbitReporter extends ScheduledReporter {
      * Builds the {@link RabbitReporter}.
      *
      * @param rabbit
-     *          the {@link RabbitClient}
+     *     the {@link RabbitClient}
      * @return the {@link RabbitReporter}
      */
     public RabbitReporter build(RabbitClient rabbit) {

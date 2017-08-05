@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     <p>http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
  * <p>Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,10 +29,10 @@ import java.util.Objects;
 public class TransportableMeter extends TransportableCounter implements Metered {
   private static final long serialVersionUID = 1L;
 
-  private double            fifteenMinute;
-  private double            fiveMinute;
-  private double            mean;
-  private double            oneMinute;
+  private double fifteenMinute;
+  private double fiveMinute;
+  private double mean;
+  private double oneMinute;
 
   public TransportableMeter() {
 
@@ -42,15 +42,15 @@ public class TransportableMeter extends TransportableCounter implements Metered 
    * Creates a {@link TransportableMeter}.
    *
    * @param count
-   *          the count
+   *     the count
    * @param fifteenMinute
-   *          the fifteen minute value
+   *     the fifteen minute value
    * @param fiveMinute
-   *          the five minute value
+   *     the five minute value
    * @param mean
-   *          the mean value
+   *     the mean value
    * @param oneMinute
-   *          the one minute value
+   *     the one minute value
    */
   public TransportableMeter(long count, double fifteenMinute, double fiveMinute, double mean, double oneMinute) {
     super(count);
@@ -65,12 +65,13 @@ public class TransportableMeter extends TransportableCounter implements Metered 
    * {@link Metered}.
    *
    * @param metered
-   *          the originating {@link Metered}
+   *     the originating {@link Metered}
    * @return the generated {@link TransportableMeter}
    */
   public static TransportableMeter of(Metered metered) {
     return new TransportableMeter(metered.getCount(), metered.getFifteenMinuteRate(), metered.getFiveMinuteRate(),
-        metered.getMeanRate(), metered.getOneMinuteRate());
+                                  metered.getMeanRate(), metered.getOneMinuteRate()
+    );
   }
 
   @Override

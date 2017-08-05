@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     <p>http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
  * <p>Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,7 +21,7 @@ import io.github.mattcarrier.metrics.transport.serialization.transportable.Trans
 /**
  * Tests serialization for {@link TransportableMetric} objects using the
  * {@link KryoSerializer}
- * 
+ *
  * @author mattcarrier
  * @since Apr 2, 2017
  */

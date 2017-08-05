@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     <p>http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
  * <p>Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -39,7 +39,7 @@ import java.util.Map;
 
 /**
  * {@link Transportable} conversion tests.
- * 
+ *
  * @author mattcarrier
  * @since Apr 2, 2017
  */
@@ -81,8 +81,8 @@ public class TransportableFactoryTest {
     final ImmutableSet<Transportable> transportables = metric.getTransportables();
     assertEquals(1, transportables.size());
 
-    @SuppressWarnings("unchecked")
-    final TransportableGauge<Integer> tc = (TransportableGauge<Integer>) transportables.iterator().next();
+    @SuppressWarnings("unchecked") final TransportableGauge<Integer> tc =
+        (TransportableGauge<Integer>) transportables.iterator().next();
     verifyTransportableMetricFields(name, timestamp, metric);
     verifyTransportableGauge(gauge.getValue(), tc);
   }
@@ -258,7 +258,7 @@ public class TransportableFactoryTest {
 
       @Override
       public long[] getValues() {
-        return new long[] { 1L };
+        return new long[]{1L};
       }
 
       @Override
@@ -358,7 +358,7 @@ public class TransportableFactoryTest {
   }
 
   private void verifyTransportableMetricFields(String name, ZonedDateTime timestamp, Map<String, Object> meta,
-      TransportableMetric t) {
+                                               TransportableMetric t) {
     assertEquals(name, t.getName());
     assertEquals(timestamp, t.getTimestamp());
     assertEquals(meta, t.getMeta());

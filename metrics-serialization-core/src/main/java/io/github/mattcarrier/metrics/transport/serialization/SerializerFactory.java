@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     <p>http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
  * <p>Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  */
 public class SerializerFactory {
   private static final Logger log = LoggerFactory.getLogger(SerializerFactory.class);
-  private final Serializer    serializer;
+  private final Serializer serializer;
 
   /**
    * Checks the classpath under package
@@ -40,11 +40,11 @@ public class SerializerFactory {
    * defaults to the {@link JavaSerializer} if none is found.
    *
    * @throws IOException
-   *           if there is an issue scanning the classpath
+   *     if there is an issue scanning the classpath
    * @throws InstantiationException
-   *           if there is an issue instantiating the serializer
+   *     if there is an issue instantiating the serializer
    * @throws IllegalAccessException
-   *           if there is an issue instantiating the serializer
+   *     if there is an issue instantiating the serializer
    */
   public SerializerFactory() throws IOException, InstantiationException, IllegalAccessException {
     this("io.github.mattcarrier.metrics.transport");
@@ -55,18 +55,18 @@ public class SerializerFactory {
    * defaults to the {@link JavaSerializer} if none is found.
    *
    * @param basePackage
-   *          the base package to scan for serializers
+   *     the base package to scan for serializers
    * @throws IOException
-   *           if there is an issue scanning the classpath
+   *     if there is an issue scanning the classpath
    * @throws InstantiationException
-   *           if there is an issue instantiating the serializer
+   *     if there is an issue instantiating the serializer
    * @throws IllegalAccessException
-   *           if there is an issue instantiating the serializer
+   *     if there is an issue instantiating the serializer
    */
   public SerializerFactory(String basePackage) throws IOException, InstantiationException, IllegalAccessException {
     log.debug("Scanning the classpath under basePackage [{}] for metric serializers.", basePackage);
-    final Set<Class<? extends Serializer>> serializers = new Reflections(basePackage).getSubTypesOf(Serializer.class)
-        .stream().filter(s -> !JavaSerializer.class.equals(s)).collect(Collectors.toSet());
+    final Set<Class<?>> serializers = new Reflections(basePackage).getTypesAnnotatedWith(SerializerImpl.class)
+        .stream().filter(s -> JavaSerializer.class != s).collect(Collectors.toSet());
 
     if (serializers.isEmpty()) {
       log.warn("Using java serialization for metric transportation which is not suggested for production use.");
@@ -75,8 +75,10 @@ public class SerializerFactory {
     }
 
     if (1 != serializers.size()) {
-      log.warn("Multiple metric transportation serializer implementations have been found on the classpath [{}].",
-          serializers);
+      log.warn(
+          "Multiple metric transportation serializer implementations have been found on the classpath [{}].",
+          serializers
+      );
     }
 
     final Class<?> serializerClass = serializers.iterator().next();

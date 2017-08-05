@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     <p>http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
  * <p>Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -44,6 +44,7 @@ import com.codahale.metrics.Timer;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -58,27 +59,29 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Integration tests with RabbitMQ.
- * 
+ *
  * @author mattcarrier
  * @since Apr 4, 2017
  */
 public class RabbitTest {
-  private static final String                 RABBIT_HOST = System.getProperty("RABBIT_HOST",
-      RabbitMQRule.DEFAULT_HOST);
+  private static final String RABBIT_HOST = System.getProperty(
+      "RABBIT_HOST",
+      RabbitMQRule.DEFAULT_HOST
+  );
 
   // If you use docker-machine for docker for mac/windows then you will need to
   // set the RABBIT_HOST appropriately
   // private static final String RABBIT_HOST = "192.168.99.100";
-
-  private static Serializer                   serializer  = new JavaSerializer();
-  private static MetricRegistry               registry    = new MetricRegistry();
-  private static String                       metricName  = name(RabbitTest.class, "metric");
-  private static ImmutableMap<String, Object> metricMeta  = ImmutableMap.<String, Object>builder()
-      .put("host", "127.0.0.1").build();
-
   @ClassRule
-  public static RabbitMQRule                  rabbit      = new RabbitMQRule(RabbitMQRule.DEFAULT_USERNAME,
-      RabbitMQRule.DEFAULT_PASSWORD, RABBIT_HOST, RabbitMQRule.DEFAULT_PORT, RabbitMQRule.DEFAULT_VHOST);
+  public static RabbitMQRule rabbit = new RabbitMQRule(RabbitMQRule.DEFAULT_USERNAME,
+                                                       RabbitMQRule.DEFAULT_PASSWORD, RABBIT_HOST,
+                                                       RabbitMQRule.DEFAULT_PORT, RabbitMQRule.DEFAULT_VHOST
+  );
+  private static Serializer                   serializer = new JavaSerializer();
+  private static MetricRegistry               registry   = new MetricRegistry();
+  private static String                       metricName = name(RabbitTest.class, "metric");
+  private static ImmutableMap<String, Object> metricMeta = ImmutableMap.<String, Object>builder()
+      .put("host", "127.0.0.1").build();
 
   @BeforeClass
   public static void reporter() throws Exception {
@@ -88,6 +91,7 @@ public class RabbitTest {
   }
 
   @Before
+  @After
   public void purge() {
     registry.remove(metricName);
     rabbit.purge();
@@ -105,8 +109,10 @@ public class RabbitTest {
     });
 
     rabbit.expect(5);
-    compare(rabbit.wait(Duration.ofSeconds(5)),
-        ImmutableList.of(counter(0), counter(1), counter(2), counter(3), counter(4)));
+    compare(
+        rabbit.wait(Duration.ofSeconds(5)),
+        ImmutableList.of(counter(0), counter(1), counter(2), counter(3), counter(4))
+    );
   }
 
   @Test
@@ -198,7 +204,7 @@ public class RabbitTest {
 
           @Override
           public long[] getValues() {
-            return new long[] { val() };
+            return new long[]{val()};
           }
 
           @Override
@@ -278,8 +284,10 @@ public class RabbitTest {
     });
 
     rabbit.expect(5);
-    compare(rabbit.wait(Duration.ofSeconds(5)),
-        ImmutableList.of(histogram(0), histogram(1), histogram(2), histogram(3), histogram(4)));
+    compare(
+        rabbit.wait(Duration.ofSeconds(5)),
+        ImmutableList.of(histogram(0), histogram(1), histogram(2), histogram(3), histogram(4))
+    );
   }
 
   @Test
@@ -300,7 +308,7 @@ public class RabbitTest {
 
           @Override
           public long[] getValues() {
-            return new long[] { val() };
+            return new long[]{val()};
           }
 
           @Override
@@ -416,7 +424,7 @@ public class RabbitTest {
 
           @Override
           public long[] getValues() {
-            return new long[] { i };
+            return new long[]{i};
           }
 
           @Override
@@ -538,7 +546,7 @@ public class RabbitTest {
 
           @Override
           public long[] getValues() {
-            return new long[] { i };
+            return new long[]{i};
           }
 
           @Override

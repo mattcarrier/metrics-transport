@@ -1,5 +1,7 @@
 .classpath
 .dobi
+.idea
+*.iml
 *.md.html
 .project
 .settings

@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-package io.github.mattcarrier.metrics.transport.serialization.transportable;
+package io.github.mattcarrier.metrics.transport.serialization;
 
-import java.io.Serializable;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
 /**
- * Marker for transportable instances.
+ * Marker for {@link Serializer} implementations.
  *
  * @author mattcarrier
- * @since Apr 2, 2017
+ * @since Aug 05, 2017
  */
-public interface Transportable extends Serializable {
-
+@Retention(RUNTIME)
+@Target(TYPE)
+public @interface SerializerImpl {
 }
