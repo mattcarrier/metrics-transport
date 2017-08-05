@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     <p>http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
  * <p>Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,20 +29,20 @@ import java.util.Map;
 
 /**
  * Converts {@link Metric} objects into {@link Transportable} objects.
- * 
+ *
  * @author mattcarrier
  * @since Apr 2, 2017
  */
 public class TransportableFactory {
   /**
    * Converts a {@link Metric} into {@link Transportable} objects.
-   * 
+   *
    * @param name
-   *          the name of the {@link Metric}
+   *     the name of the {@link Metric}
    * @param timestamp
-   *          the creation timestamp
+   *     the creation timestamp
    * @param metric
-   *          the {@link Metric} to convert
+   *     the {@link Metric} to convert
    * @return the {@link TransportableMetric}
    */
   public TransportableMetric convert(String name, ZonedDateTime timestamp, Metric metric) {
@@ -51,15 +51,15 @@ public class TransportableFactory {
 
   /**
    * Converts a {@link Metric} into {@link Transportable} objects.
-   * 
+   *
    * @param name
-   *          the name of the {@link Metric}
+   *     the name of the {@link Metric}
    * @param timestamp
-   *          the creation timestamp
+   *     the creation timestamp
    * @param meta
-   *          additional metadata to attach to the {@link TransportableMetric}
+   *     additional metadata to attach to the {@link TransportableMetric}
    * @param metric
-   *          the {@link Metric} to convert
+   *     the {@link Metric} to convert
    * @return the {@link TransportableMetric}
    */
   public TransportableMetric convert(String name, ZonedDateTime timestamp, Map<String, Object> meta, Metric metric) {

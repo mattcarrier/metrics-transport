@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     <p>http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
  * <p>Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,25 +33,23 @@ import java.util.List;
 
 /**
  * {@link ExternalResource} that provides access to RabbitMQ.
- * 
+ *
  * @author mattcarrier
  * @since Apr 4, 2017
  */
 public class RabbitMQRule extends ExternalResource {
-  private static final String   QUEUE_NAME       = "metrics-rabbit";
+  public static final String DEFAULT_USERNAME = "guest";
+  public static final String DEFAULT_PASSWORD = "guest";
+  public static final String DEFAULT_HOST     = "localhost";
+  public static final String DEFAULT_PORT     = "5672";
+  public static final String DEFAULT_VHOST    = "";
+  private static final String QUEUE_NAME = "metrics-rabbit";
+  private final String connectionUri;
 
-  public static final String    DEFAULT_USERNAME = "guest";
-  public static final String    DEFAULT_PASSWORD = "guest";
-  public static final String    DEFAULT_HOST     = "localhost";
-  public static final String    DEFAULT_PORT     = "5672";
-  public static final String    DEFAULT_VHOST    = "";
+  private Connection conn;
+  private Channel    channel;
 
-  private final String          connectionUri;
-
-  private Connection            conn;
-  private Channel               channel;
-
-  private volatile boolean      isExpecting      = false;
+  private volatile boolean isExpecting = false;
   private volatile List<byte[]> messages;
   private volatile int          expected;
 
@@ -66,9 +64,9 @@ public class RabbitMQRule extends ExternalResource {
   /**
    * Initiates expectation mode which starts storing messages until the
    * requested amount is retrieved
-   * 
+   *
    * @param expected
-   *          the number of messages to store
+   *     the number of messages to store
    */
   public void expect(int expected) {
     if (1 > expected) {
@@ -82,9 +80,9 @@ public class RabbitMQRule extends ExternalResource {
 
   /**
    * Wait until the requested amount of messages from expect has been received.
-   * 
+   *
    * @param timeout
-   *          the timeout
+   *     the timeout
    * @return the received messages
    */
   public List<byte[]> wait(Duration timeout) {

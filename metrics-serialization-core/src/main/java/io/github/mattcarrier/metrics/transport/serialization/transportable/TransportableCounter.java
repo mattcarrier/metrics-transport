@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     <p>http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
  * <p>Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,7 +31,7 @@ import java.util.Objects;
 public class TransportableCounter implements Transportable, Counting {
   private static final long serialVersionUID = 1L;
 
-  protected long            count;
+  protected long count;
 
   public TransportableCounter() {
 
@@ -46,7 +46,7 @@ public class TransportableCounter implements Transportable, Counting {
    * {@link Counting}.
    *
    * @param counting
-   *          the originating {@link Counting}
+   *     the originating {@link Counting}
    * @return the generated {@link TransportableCounter}
    */
   public static TransportableCounter of(Counting counting) {

@@ -14,16 +14,26 @@
  * limitations under the License.
  */
 
-package io.github.mattcarrier.metrics.transport.serialization.transportable;
+package io.github.mattcarrier.metrics.transport.consumer;
 
-import java.io.Serializable;
+import static org.junit.Assert.assertEquals;
+
+import io.github.mattcarrier.metrics.transport.consumption.DefaultMetricConsumer;
+import io.github.mattcarrier.metrics.transport.consumption.MetricConsumerFactory;
+
+import org.junit.Test;
+
+import java.io.IOException;
 
 /**
- * Marker for transportable instances.
+ * Unit tests for {@link MetricConsumerFactory}.
  *
  * @author mattcarrier
- * @since Apr 2, 2017
+ * @since Aug 05, 2017
  */
-public interface Transportable extends Serializable {
-
+public class MetricConsumerFactoryTest {
+  @Test
+  public void defaultConsumer() throws IllegalAccessException, IOException, InstantiationException {
+    assertEquals(DefaultMetricConsumer.class, new MetricConsumerFactory().consumer().getClass());
+  }
 }

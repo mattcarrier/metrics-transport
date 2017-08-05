@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     <p>http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
  * <p>Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -67,14 +67,16 @@ public abstract class AbstractSerializerTest {
   @Test
   public void serializeTransportableSnapshot() throws Exception {
     final TransportableMetric metric = new TransportableMetric("name", ZonedDateTime.now(),
-        ImmutableSet.of(snapshot()));
+                                                               ImmutableSet.of(snapshot())
+    );
     assertEquals(metric, serializer.deserialize(serializer.serialize(metric)));
   }
 
   @Test
   public void serializeComposite() throws Exception {
     final TransportableMetric metric = new TransportableMetric("name", ZonedDateTime.now(),
-        ImmutableSet.of(counter(), gauge(), meter(), snapshot()));
+                                                               ImmutableSet.of(counter(), gauge(), meter(), snapshot())
+    );
     assertEquals(metric, serializer.deserialize(serializer.serialize(metric)));
   }
 
@@ -97,6 +99,6 @@ public abstract class AbstractSerializerTest {
   }
 
   private TransportableSnapshot snapshot() {
-    return new TransportableSnapshot(new long[] { 1 }, 2, 0.1, 3, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8);
+    return new TransportableSnapshot(new long[]{1}, 2, 0.1, 3, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8);
   }
 }

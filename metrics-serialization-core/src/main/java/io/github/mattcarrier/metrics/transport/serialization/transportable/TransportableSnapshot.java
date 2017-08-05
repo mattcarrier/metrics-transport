@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     <p>http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
  * <p>Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,18 +31,18 @@ import java.util.Objects;
 public class TransportableSnapshot implements Transportable {
   private static final long serialVersionUID = 1L;
 
-  private long[]            values;
-  private int               size;
-  private long              max;
-  private double            mean;
-  private long              min;
-  private double            stdDev;
-  private double            median;
-  private double            seventyFifth;
-  private double            ninetyFifth;
-  private double            ninetyEigth;
-  private double            ninetyNinth;
-  private double            nineHundredNinetyNinth;
+  private long[] values;
+  private int    size;
+  private long   max;
+  private double mean;
+  private long   min;
+  private double stdDev;
+  private double median;
+  private double seventyFifth;
+  private double ninetyFifth;
+  private double ninetyEigth;
+  private double ninetyNinth;
+  private double nineHundredNinetyNinth;
 
   public TransportableSnapshot() {
 
@@ -52,30 +52,31 @@ public class TransportableSnapshot implements Transportable {
    * Creates a {@link TransportableSnapshot}.
    *
    * @param values
-   *          the values
+   *     the values
    * @param max
-   *          the max value
+   *     the max value
    * @param mean
-   *          the mean value
+   *     the mean value
    * @param min
-   *          the min value
+   *     the min value
    * @param stdDev
-   *          the standard deviation
+   *     the standard deviation
    * @param median
-   *          the median value
+   *     the median value
    * @param seventyFifth
-   *          the seventy-fifth percentile
+   *     the seventy-fifth percentile
    * @param ninetyFifth
-   *          the ninety-fifth percentile
+   *     the ninety-fifth percentile
    * @param ninetyEigth
-   *          the ninety-eigth percentile
+   *     the ninety-eigth percentile
    * @param ninetyNinth
-   *          the ninety-ninth percentile
+   *     the ninety-ninth percentile
    * @param nineHundredNinetyNinth
-   *          the nine-hundred and ninety-ninth percentile
+   *     the nine-hundred and ninety-ninth percentile
    */
   public TransportableSnapshot(long[] values, long max, double mean, long min, double stdDev, double median,
-      double seventyFifth, double ninetyFifth, double ninetyEigth, double ninetyNinth, double nineHundredNinetyNinth) {
+                               double seventyFifth, double ninetyFifth, double ninetyEigth, double ninetyNinth,
+                               double nineHundredNinetyNinth) {
     this.values = values;
     this.size = values.length;
     this.max = max;
@@ -95,13 +96,16 @@ public class TransportableSnapshot implements Transportable {
    * {@link Snapshot}.
    *
    * @param snapshot
-   *          the originating {@link Snapshot}
+   *     the originating {@link Snapshot}
    * @return the generated {@link TransportableSnapshot}
    */
   public static TransportableSnapshot of(Snapshot snapshot) {
     return new TransportableSnapshot(snapshot.getValues(), snapshot.getMax(), snapshot.getMean(), snapshot.getMin(),
-        snapshot.getStdDev(), snapshot.getMedian(), snapshot.get75thPercentile(), snapshot.get95thPercentile(),
-        snapshot.get98thPercentile(), snapshot.get99thPercentile(), snapshot.get999thPercentile());
+                                     snapshot.getStdDev(), snapshot.getMedian(), snapshot.get75thPercentile(),
+                                     snapshot.get95thPercentile(),
+                                     snapshot.get98thPercentile(), snapshot.get99thPercentile(),
+                                     snapshot.get999thPercentile()
+    );
   }
 
   public long[] getValues() {

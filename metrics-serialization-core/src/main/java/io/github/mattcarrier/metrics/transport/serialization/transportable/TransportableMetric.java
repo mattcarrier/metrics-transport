@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     <p>http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
  * <p>Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,7 +34,7 @@ import java.util.Objects;
  * @since Apr 2, 2017
  */
 public class TransportableMetric implements Serializable {
-  private static final long            serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
   private String                       name;
   private ZonedDateTime                timestamp;
@@ -53,16 +53,16 @@ public class TransportableMetric implements Serializable {
    * Creates a {@link TransportableMetric}.
    *
    * @param name
-   *          the name if the metric
+   *     the name if the metric
    * @param timestamp
-   *          the creation timestamp
+   *     the creation timestamp
    * @param meta
-   *          the meta
+   *     the meta
    * @param transportables
-   *          the transportables
+   *     the transportables
    */
   public TransportableMetric(String name, ZonedDateTime timestamp, Map<String, Object> meta,
-      ImmutableSet<Transportable> transportables) {
+                             ImmutableSet<Transportable> transportables) {
     this.name = name;
     this.timestamp = timestamp;
     this.meta = ImmutableMap.copyOf(meta);

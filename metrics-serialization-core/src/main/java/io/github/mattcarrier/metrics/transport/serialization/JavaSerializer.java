@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     <p>http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
  * <p>Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,11 +29,12 @@ import java.io.ObjectOutputStream;
  * @author mattcarrier
  * @since Apr 2, 2017
  */
+@SerializerImpl
 public class JavaSerializer implements Serializer {
   @Override
   public byte[] serialize(TransportableMetric metric) throws Exception {
     try (final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        final ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+         final ObjectOutputStream oos = new ObjectOutputStream(baos)) {
       oos.writeObject(metric);
       return baos.toByteArray();
     }

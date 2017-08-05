@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     <p>http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
  * <p>Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,31 +20,31 @@ import io.github.mattcarrier.metrics.transport.serialization.transportable.Trans
 
 /**
  * Serializes/Deserializes {@link TransportableMetric} objects.
- * 
+ *
  * @author mattcarrier
  * @since Apr 2, 2017
  */
 public interface Serializer {
   /**
    * Serializes the {@link TransportableMetric}.
-   * 
+   *
    * @param metric
-   *          the {@link TransportableMetric} to serialize
+   *     the {@link TransportableMetric} to serialize
    * @return the serialized output
    * @throws Exception
-   *           if there is an issue serializing the {@link TransportableMetric}
+   *     if there is an issue serializing the {@link TransportableMetric}
    */
   public byte[] serialize(TransportableMetric metric) throws Exception;
 
   /**
    * Deserializes the serialized input into a {@link TransportableMetric}.
-   * 
+   *
    * @param serialized
-   *          the serialized output
+   *     the serialized output
    * @return the deserialized {@link TransportableMetric}
    * @throws Exception
-   *           if there is an issue deserializing the
-   *           {@link TransportableMetric}
+   *     if there is an issue deserializing the
+   *     {@link TransportableMetric}
    */
   public TransportableMetric deserialize(byte[] serialized) throws Exception;
 }
