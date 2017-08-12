@@ -19,7 +19,6 @@ package io.github.mattcarrier.metrics.transport.rabbit;
 import static org.junit.Assert.assertEquals;
 
 import io.github.mattcarrier.metrics.transport.consumption.DefaultMetricConsumer;
-import io.github.mattcarrier.metrics.transport.consumption.MetricConsumerImpl;
 import io.github.mattcarrier.metrics.transport.serialization.transportable.Transportable;
 import io.github.mattcarrier.metrics.transport.serialization.transportable.TransportableCounter;
 import io.github.mattcarrier.metrics.transport.serialization.transportable.TransportableMetric;
@@ -30,7 +29,6 @@ import io.github.mattcarrier.metrics.transport.serialization.transportable.Trans
  * @author mattcarrier
  * @since Aug 05, 2017
  */
-@MetricConsumerImpl
 public class AssertingMetricConsumer extends DefaultMetricConsumer {
   private long count;
 

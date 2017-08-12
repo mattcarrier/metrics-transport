@@ -24,7 +24,6 @@ import io.github.mattcarrier.metrics.transport.serialization.transportable.Trans
  * @author mattcarrier
  * @since Aug 03, 2017
  */
-@MetricConsumerImpl
 public class DefaultMetricConsumer extends MetricConsumer<TransportableMetric> {
   @Override
   protected TransportableMetric convert(TransportableMetric metric) {

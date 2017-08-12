@@ -16,6 +16,8 @@
 
 package io.github.mattcarrier.metrics.transport.rabbit;
 
+import io.github.mattcarrier.metrics.transport.consumption.DefaultMetricConsumer;
+
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableMap;
@@ -73,7 +75,7 @@ public class RabbitConsumptionTest {
 
   @Test
   public void consume() throws IOException, InterruptedException {
-    client.consume("default");
+    client.consume("default", new AssertingMetricConsumer());
     registry.register(metricName, new Counter() {
       final AtomicInteger i = new AtomicInteger();
 
