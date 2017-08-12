@@ -40,16 +40,27 @@ Usage
 </dependency>
 ...
 ```
-3a. Serialization: Create and start the transport reporter
+3. Include the appropriate consumption library
+```xml
+...
+<dependency>
+  <groupId>io.github.mattcarrier.metrics.transport</groupId>
+  <artifactId>metrics-consumption-influxdb</artifactId>
+  <version>0.4.0</version>
+</dependency>
+...
+```
+4a. Serialization: Create and start the transport reporter
 ```java
 RabbitReporter reporter = new RabbitReporter.Builder(registry).metricMeta(metricMeta)
     .build(new RabbitClient.Builder().host(RABBIT_HOST).durable(false).autoDelete(true).build());
 reporter.start(100, TimeUnit.MILLISECONDS);
 ```
-3b. Deserialization: Create and start a consumer
+4b. Deserialization: Create and start the consumer
 ```java
 RabbitClient client = new RabbitClient.Builder().build();
-client.consume("myConsumerTag", i -> { System.out.println(i) });
+InfluxDbMetricConsumer consumer = new InfluxDbMetricConsumer.Builder().build();
+client.consume("myConsumerTag", consumer);
 ```
 
 Development
