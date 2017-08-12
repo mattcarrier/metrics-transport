@@ -17,7 +17,6 @@
 package io.github.mattcarrier.metrics.transport.rabbit;
 
 import io.github.mattcarrier.metrics.transport.consumption.MetricConsumer;
-import io.github.mattcarrier.metrics.transport.consumption.MetricConsumerFactory;
 import io.github.mattcarrier.metrics.transport.serialization.Serializer;
 import io.github.mattcarrier.metrics.transport.serialization.SerializerFactory;
 import io.github.mattcarrier.metrics.transport.serialization.transportable.TransportableMetric;
@@ -44,19 +43,16 @@ import java.util.concurrent.TimeoutException;
  * @since Apr 3, 2017
  */
 public class RabbitClient {
-  private final Connection     conn;
-  private final Channel        channel;
-  private final MetricConsumer consumer;
-  private final String         queueName;
-  private final Serializer     serializer;
+  private final Connection conn;
+  private final Channel    channel;
+  private final String     queueName;
+  private final Serializer serializer;
 
-  protected RabbitClient(Connection conn, Channel channel, String queueName, Serializer serializer,
-                         MetricConsumer consumer) {
+  protected RabbitClient(Connection conn, Channel channel, String queueName, Serializer serializer) {
     this.conn = conn;
     this.channel = channel;
     this.queueName = queueName;
     this.serializer = serializer;
-    this.consumer = consumer;
   }
 
   /**
@@ -81,10 +77,12 @@ public class RabbitClient {
    *
    * @param consumerTag
    *     the consumer tag
+   * @param consumer
+   *     the consumer
    * @throws IOException
    *     if there are any issues handling the deliveries
    */
-  public void consume(String consumerTag) throws IOException {
+  public <T> void consume(String consumerTag, MetricConsumer<T> consumer) throws IOException {
     channel.basicConsume(queueName, true, consumerTag, new DefaultConsumer(channel) {
       @Override
       public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
@@ -130,7 +128,6 @@ public class RabbitClient {
     private boolean             isAutoDelete = false;
     private Map<String, Object> arguments    = null;
 
-    private String consumerBasePackage   = null;
     private String serializerBasePackage = null;
 
     public Builder username(String username) {
@@ -183,11 +180,6 @@ public class RabbitClient {
       return this;
     }
 
-    public Builder consumerBasePackage(String consumerBasePackage) {
-      this.consumerBasePackage = consumerBasePackage;
-      return this;
-    }
-
     public Builder serializerBasePackage(String serializerBasePackage) {
       this.serializerBasePackage = serializerBasePackage;
       return this;
@@ -222,9 +214,7 @@ public class RabbitClient {
       channel.queueDeclare(queue, isDurable, isExclusive, isAutoDelete, arguments);
       final SerializerFactory serializerFactory = null == serializerBasePackage ? new SerializerFactory()
           : new SerializerFactory(serializerBasePackage);
-      final MetricConsumerFactory consumerFactory =
-          null == consumerBasePackage ? new MetricConsumerFactory() : new MetricConsumerFactory(consumerBasePackage);
-      return new RabbitClient(conn, channel, queue, serializerFactory.serializer(), consumerFactory.consumer());
+      return new RabbitClient(conn, channel, queue, serializerFactory.serializer());
     }
 
     private String buildConnectionUri() {

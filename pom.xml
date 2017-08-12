@@ -50,6 +50,9 @@
     <versions.kryoserializers>0.41</versions.kryoserializers>
     <versions.rabbitmq>4.1.0</versions.rabbitmq>
     <versions.reflections>0.9.11</versions.reflections>
+    <versions.influxdb>2.5</versions.influxdb>
+    <versions.mockito>2.8.47</versions.mockito>
+    <versions.powermock>1.7.0</versions.powermock>
   </properties>
 
   <dependencies>
@@ -247,5 +250,6 @@
     <module>metrics-serialization-serializer-tests</module>
     <module>metrics-rabbit</module>
     <module>metrics-consumption-core</module>
+    <module>metrics-consumption-influxdb</module>
   </modules>
 </project>

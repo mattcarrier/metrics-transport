@@ -67,13 +67,19 @@ job=maven-build:
   net-mode:     inttestenv_default
   command:      mvn clean verify jacoco:report
   env:          [
-    "RABBIT_HOST=rabbit"
+    "RABBIT_HOST=rabbit",
+    "INFLUXDB_URL=http://influx:8086"
   ]
 
 job=wait-for-rabbit:
   use:      dockerize
   net-mode: inttestenv_default
   command:  'dockerize -wait tcp://rabbit:5672 -timeout 1m'
+
+job=wait-for-influxdb:
+  use:      dockerize
+  net-mode: inttestenv_default
+  command:  'dockerize -wait tcp://influx:8086 -timeout 1m'
 
 compose=int-test-env:
   files:    [ docker-compose.yml ]
@@ -83,7 +89,7 @@ alias=coverage:
   tasks: [ build, maven-coverage ]
 
 alias=build:
-  tasks: [ int-test-env, wait-for-rabbit, maven-build ]
+  tasks: [ int-test-env, wait-for-rabbit, wait-for-influxdb, maven-build ]
 
 alias=deploy:
   tasks: [ coverage, ossrh-upload ]
